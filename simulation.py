@@ -20,7 +20,7 @@ xinit = -3.36  #cm # -3.36
 yinit = -3.36  #cm
 
 dt = 0.0000001  # s
-Nt = 100000
+Nt = 40000
 # ------------ Main ---------------------
 t = 0
 step = 100
@@ -69,7 +69,9 @@ plt.axes(xlim=(l[0]-2,l[0]+2), ylim=(l[1]-2,l[0]+2))
 plt.plot(Membrane.x_p,Membrane.y_p, '-')
 plt.show()
 '''
+i=0
 for p in l:
+	i+=1
 	for nu in freq:
 		print("freq = {:0.1f} \n p=({:0.2f}, {:0.2f})\n ...Simulating...".format(nu,p[0],p[1]))
 		center = np.random.random((2,))
@@ -92,9 +94,10 @@ for p in l:
 
 		plt.figure()
 		plt.title(r'Proyección en ({:0.2f}cm, {:0.2f}cm) en $t=${:0.4f}$s$ y $\nu=${:0.1f}$Hz$ '.format(Membrane.x_point,Membrane.y_point,t*Membrane.dt,Membrane.freq))
-		plt.axes(xlim=(p[0]-2,p[0]+2), ylim=(p[1]-2,p[1]+2))
+		plt.xlim(p[0]-2,p[0]+2)
+		plt.ylim(p[1]-2,p[1]+2)
 		plt.plot(Membrane.x_p,Membrane.y_p, '-')
-		plt.show()
+		plt.savefig('Sim_p{:0.0f}-{:0.0f}.png'.format(i,nu))
 		
 
 '''

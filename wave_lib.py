@@ -57,6 +57,7 @@ class Wave:
     rlength = self.Xinit+self.Nx*self.dx
     self.circle_grid = draw_noncentered_circle(int(self.Nx/2),self.Nx/rlength, 2)
 
+    # circle matrix of force multiplier
     if method=='Gaussian':
       self.force_circle = np.exp((-(self.x-self.center[0])**2.-(self.y-self.center[1])**2.)/0.1)*draw_noncentered_circle(int(self.Nx/2),self.Nx/rlength, 4)
     elif method=='Uniform':
@@ -72,9 +73,9 @@ class Wave:
     #phi0 = self.A*0.5*np.exp((-self.x*self.x-self.y*self.y)/3)*self.circle_grid + self.eps # cm
     self.phi = phi0
 
-    psi   = np.gradient(self.phi) + self.eps*np.ones_like(self.phi) 
-    self.psi_x = psi[1]
-    self.psi_y = psi[0]
+    # variable change
+    self.psi_x = np.gradient(self.phi,self.dx,axis=1)
+    self.psi_y = np.gradient(self.phi,self.dy,axis=0)
     self.pi    = np.zeros_like(self.phi) # cm/s
     self.pi = (phi0-phi1)/(2000*self.dt) + self.eps*np.ones_like(self.phi)
 
@@ -166,7 +167,7 @@ class Wave:
   def Force(self, t, method):
       omega = self.freq*2.*np.pi
       if method=='Gaussian':
-        f =  self.A* np.sin(omega*t)*self.circle_grid#
+        f =  self.A* np.sin(omega*t)*self.force_circle
       elif method=='Uniform':
         f =  self.A* np.sin(omega*t)*self.force_circle
       elif method=='Bessel':
